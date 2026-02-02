@@ -6,8 +6,8 @@ const isProd = process.env.NODE_ENV === "production";
 
 const DEFAULT_ORIGINS = [
   "https://loginapp554.netlify.app",
-  "https://loginappp45.netlify.app",
   "https://spontaneous-speculoos-458684.netlify.app",
+  "https://loginappp45.netlify.app",
   "http://localhost:5173",
   "http://localhost:5174",
   "http://127.0.0.1:5173",
@@ -59,15 +59,22 @@ export const createApp = () => {
     res.json({ ok: true });
   });
 
-  app.use((err: unknown, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    const message = err instanceof Error ? err.message : "Unexpected error";
-    const status = message.startsWith("CORS blocked") ? 403 : 500;
+  app.use(
+    (
+      err: unknown,
+      _req: express.Request,
+      res: express.Response,
+      _next: express.NextFunction,
+    ) => {
+      const message = err instanceof Error ? err.message : "Unexpected error";
+      const status = message.startsWith("CORS blocked") ? 403 : 500;
 
-    res.status(status).json({
-      ok: false,
-      error: isProd ? "Server error" : message,
-    });
-  });
+      res.status(status).json({
+        ok: false,
+        error: isProd ? "Server error" : message,
+      });
+    },
+  );
 
   return app;
 };
